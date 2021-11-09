@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+<head>
+    <title>VLOOKUP</title>
+</head>
+
+<body>
+    <script type="text/javascript" language="javascript">
+
+    let employees = [
+        {"name": "Jānis", "surname": "Pētersons", "person_codecode": "190198-14875"},
+        {"name": "Agrus", "surname": "Palape", "person_codecode": "010100-17969"},
+        {"name": "Rihards", "surname": "Ozols", "person_codecode": "200469-66666"},
+        {"name": "Jana", "surname": "Lapa", "person_codecode": "031099-03109"},
+        {"name": "Niklāvs", "surname": "Kalns", "person_codecode": "020202-20202"}
+    ]
+
+    let salary = [
+        {"salary": 1500, "person_codecode": "190198-14875"},
+        {"salary": 1200, "person_codecode": "010100-17969"},
+        {"salary": 1800, "person_codecode": "200469-66666"},
+        {"salary": 1750, "person_codecode": "031099-03109"},
+        {"salary": 999, "person_codecode": "020202-20202"}
+    ]
+
+    let employees_salary = employees.map(employees_code => {
+        let other_employees_salary = salary.find(salary_code => salary_code.person_codecode === employees_code.person_codecode)
+        return { ...employees_code, ...other_employees_salary }
+    })
+
+    console.log(employees)
+    console.log(salary)
+    console.log(employees_salary)
+    </script>
+</body>
