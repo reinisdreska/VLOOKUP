@@ -25,11 +25,23 @@
             console.log(parameters)
         
             function all_employees_salary(table1, table2, parameters) {
+
                 let table1_array = table1.map(table1_code => {
                     let table2_array = table2.find(table2_code => table2_code[parameters] === table1_code[parameters])
                     return { ...table1_code, ...table2_array }
                 })
-                output(table1_array)
+
+                let table2_array = table2.map(table2_code => {
+                    let table1_array = table1.find(table1_code => table1_code[parameters] === table2_code[parameters])
+                    return { ...table2_code, ...table1_array }
+                })
+
+                let employees_salary = table2_array.concat(table1_array)
+
+                let filtered_employees_salary = [...new Map(employees_salary.map(dup => [dup[parameters], dup])).values()]
+
+                output(filtered_employees_salary)
+                
             }
 
             function output(table1){

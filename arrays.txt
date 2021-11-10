@@ -5,16 +5,17 @@
     { "name": "Jana", "surname": "Lapa", "person_codecode": "031099-03109" },
     { "name": "Niklāvs", "surname": "Kalns", "person_codecode": "020202-20202" },
     { "name": "Ēriks", "surname": "Filazofs", "person_codecode": "010101-15993" },
-    { "name": "Arfilds", "surname": "Garfilds", "person_codecode": "101080-17384" },
-    { "person_codecode": "180803-18083" }
+    { "name": "Arfilds", "surname": "Garfilds", "person_codecode": "101080-17384" }
 ]
 
 [
-    { "salary": 1500, "person_codecode": "190198-14875" },
-    { "salary": 1200, "person_codecode": "010100-17969" },
-    { "salary": 1800, "person_codecode": "200469-66666" },
-    { "salary": 1999, "person_codecode": "180803-18083" },
-    { "salary": 1750, "person_codecode": "031099-03109" },
-    { "salary": 999, "person_codecode": "020202-20202" },
-    { "salary": 1869, "person_codecode": "101080-17384" }
+    { "person_codecode": "190198-14875", "salary": 1500 },
+    { "person_codecode": "010100-17969", "salary": 1200 },
+    { "person_codecode": "200469-66666", "salary": 1800 },
+    { "person_codecode": "180803-18083", "salary": 199 },
+    { "person_codecode": "031099-03109", "salary": 1750 },
+    { "person_codecode": "020202-20202", "salary": 999 },
+    { "person_codecode": "101080-17384", "salary": 1869 }
 ]
+
+person_codecode
