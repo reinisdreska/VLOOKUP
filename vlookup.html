@@ -7,48 +7,38 @@
 </head>
 
 <body>
+    <input id="input_table1" placeholder="Ievadi pirmo tabulu">
+    <input id="input_table2" placeholder="Ievadi otro tabulu">
+    <input id="parameters" placeholder="Ievadied parameteru">
+    <button onclick="tables();" id="input_table1" id="input_table2" id="parameters">Izveido tabulas</button>
+
     <script type="text/javascript" language="javascript">
 
-    let employees = [
-        {"name": "Jānis", "surname": "Pētersons", "person_codecode": "190198-14875"},
-        {"name": "Agrus", "surname": "Palape", "person_codecode": "010100-17969"},
-        {"name": "Rihards", "surname": "Ozols", "person_codecode": "200469-66666"},
-        {"name": "Jana", "surname": "Lapa", "person_codecode": "031099-03109"},
-        {"name": "Niklāvs", "surname": "Kalns", "person_codecode": "020202-20202"},
-        {"name": "Ēriks", "surname": "Filazofs", "person_codecode": "010101-15993"},
-        {"name": "Arfilds", "surname": "Garfilds", "person_codecode": "101080-17384"},
-        {"person_codecode": "180803-18083"}
-    ]
+        function tables(){
+            let input_table1 = JSON.parse(document.getElementById("input_table1").value);
+            console.log(input_table1)
 
-    let salary = [
-        {"salary": 1500, "person_codecode": "190198-14875"},
-        {"salary": 1200, "person_codecode": "010100-17969"},
-        {"salary": 1800, "person_codecode": "200469-66666"},
-        {"salary": 1999, "person_codecode": "180803-18083"},
-        {"salary": 1750, "person_codecode": "031099-03109"},
-        {"salary": 999, "person_codecode": "020202-20202"},
-        {"salary": 1869, "person_codecode": "101080-17384"}
-    ]
+            let input_table2 = JSON.parse(document.getElementById("input_table2").value);
+            console.log(input_table2)
 
-    let employees_salary = employees.map(employees_code => {
-        let other_employees_salary = salary.find(salary_code => salary_code.person_codecode === employees_code.person_codecode)
-        return { ...employees_code, ...other_employees_salary }
+            parameters = document.getElementById("parameters").value;
+            console.log(parameters)
+        
+            function all_employees_salary(table1, table2, parameters) {
+                let table1_array = table1.map(table1_code => {
+                    let table2_array = table2.find(table2_code => table2_code[parameters] === table1_code[parameters])
+                    return { ...table1_code, ...table2_array }
+                })
+                output(table1_array)
+            }
 
-    })
+            function output(table1){
+                console.log(table1)
+            }
 
-    function all_employees_salary(table1, table2, person_codecode){
-        let table1_array = table1.map(table1_code => {
-            let table2_array = table2.find(table2_code => table2_code.person_codecode === table1_code.person_codecode)
-            return { ...table1_code, ...table2_array }
-        })
-        console.log(table1_array)
-    }
+            all_employees_salary(input_table1, input_table2, parameters)
 
-    console.log(employees)
-    console.log(salary)
-    console.log(employees_salary)
-
-    all_employees_salary(employees, salary)
+        }
 
     </script>
 </body>
