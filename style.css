@@ -1,0 +1,23 @@
+.center {
+    text-align:center;
+}
+
+textarea {
+    width: 45%;
+    height: 300px;
+}
+
+input {
+    width: 90.3%;
+    height: 40px;
+}
+
+.center select {
+    width: 38%;
+    height: 40px;
+}
+
+.center button {
+    width: 13.7%;
+    height: 40px;
+}
