@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.1/papaparse.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 <link rel="stylesheet" href="style.css">
 
 <head>
@@ -24,7 +26,8 @@
         <select name="csv_type" id="csv_type">
         </select>
 
-        <button class="btn btn-primary mb-1" onclick="tables()" id="input_table1" id="input_table2" id="parameters_table1" id="parameters_table2" id="data_type" id="csv_type">Create table</button>
+        <button class="btn btn-primary mb-1" onclick="tables()" id="input_table1" id="input_table2"
+            id="parameters_table1" id="parameters_table2" id="data_type" id="csv_type">Create table</button>
     </div>
 
     <div id="table"></div>
@@ -32,17 +35,17 @@
 
     <script type="text/javascript" language="javascript">
 
-        function populate(s1, s2){
+        function populate(s1, s2) {
             var s1 = document.getElementById(s1);
             var s2 = document.getElementById(s2);
-            
+
             s2.innerHTML = "";
 
-            if (s1.value == "csv"){
+            if (s1.value == "csv") {
                 var option_array = ["|Choose CSV type", "csv_nor| CSV", "csv_t| CSV t"];
             }
 
-            for(var option in option_array){
+            for (var option in option_array) {
                 var pair = option_array[option].split("|")
                 var new_option = document.createElement("option")
                 new_option.value = pair[0]
@@ -51,17 +54,17 @@
             }
         }
 
-        function tables(){
+        function tables() {
             let my_table = document.querySelector('#table');
 
-            if (data_type.value == "json"){
+            if (data_type.value == "json") {
                 console.log(data_type.value)
                 let input_table1 = JSON.parse(document.getElementById("input_table1").value);
                 let input_table2 = JSON.parse(document.getElementById("input_table2").value);
                 let parameters_table1 = document.getElementById("parameters_table1").value;
                 let parameters_table2 = document.getElementById("parameters_table2").value;
 
-                
+
                 function all_employees_salary(table1, table2, parameters_table1, parameters_table2) {
 
                     let table1_array = table1.map(table1_code => {
@@ -83,7 +86,7 @@
                         var fes = filtered_employees_salary[i]
                         var header = header.concat(Object.keys(fes))
                     }
-                    
+
                     let unique_header = [...new Set(header)];
 
                     output(filtered_employees_salary, unique_header)
@@ -119,21 +122,146 @@
                 all_employees_salary(input_table1, input_table2, parameters_table1, parameters_table2)
 
             }
-            else if (data_type.value == "csv"){
-                if (csv_type.value == "csv_nor"){
+            else if (data_type.value == "csv") {
+                if (csv_type.value == "csv_nor") {
                     console.log(csv_type.value)
+                    let input_table1 = Papa.parse(document.getElementById("input_table1").value, { header: true }).data;
+                    let input_table2 = Papa.parse(document.getElementById("input_table2").value, { header: true }).data;
+                    let parameters_table1 = document.getElementById("parameters_table1").value;
+                    let parameters_table2 = document.getElementById("parameters_table2").value;
+
+                    function all_employees_salary(table1, table2, parameters_table1, parameters_table2) {
+
+                        let table1_array = table1.map(table1_code => {
+                            let table2_array = table2.find(table2_code => table2_code[parameters_table2] === table1_code[parameters_table1])
+                            return { ...table1_code, ...table2_array }
+                        })
+
+                        let table2_array = table2.map(table2_code => {
+                            let table1_array = table1.find(table1_code => table1_code[parameters_table1] === table2_code[parameters_table2])
+                            return { ...table2_code, ...table1_array }
+                        })
+
+                        let employees_salary = table2_array.concat(table1_array)
+
+                        let filtered_employees_salary = [...new Map(employees_salary.map(dup => [dup[parameters_table1], dup])).values()]
+
+                        var header = []
+                        for (var i = 0; i < table1.length; i++) {
+                            var fes = filtered_employees_salary[i]
+                            var header = header.concat(Object.keys(fes))
+                        }
+
+                        let unique_header = [...new Set(header)];
+
+                        output(filtered_employees_salary, unique_header)
+
+                    }
+
+                    function output(employees, headers) {
+                        let table = document.createElement("table")
+                        let headerRow = document.createElement('tr');
+
+                        headers.forEach(headerText => {
+                            let header = document.createElement('th');
+                            let textNode = document.createTextNode(headerText);
+                            header.appendChild(textNode);
+                            headerRow.appendChild(header);
+                        });
+                        table.appendChild(headerRow);
+
+                        employees.forEach(emp => {
+                            let row = document.createElement('tr');
+                            Object.values(emp).forEach(text => {
+                                let cell = document.createElement('td');
+                                let textNode = document.createTextNode(text);
+                                cell.appendChild(textNode);
+                                row.appendChild(cell);
+                            })
+                            table.appendChild(row);
+                        });
+
+                        my_table.appendChild(table)
+                    }
+
+                    all_employees_salary(input_table1, input_table2, parameters_table1, parameters_table2)
+
                 }
-                else if (csv_type.value == "csv_t"){
+                else if (csv_type.value == "csv_t") {
                     console.log(csv_type.value)
+                    let input_table1_raw = document.getElementById("input_table1").value;
+                    let input_table1 = Papa.parse(input_table1_raw.replace(/\\t/g, ","), { header: true }).data;
+                    let input_table2_raw = document.getElementById("input_table2").value;
+                    let input_table2 = Papa.parse(input_table2_raw.replace(/\\t/g, ","), { header: true }).data;
+
+                    let parameters_table1 = document.getElementById("parameters_table1").value;
+                    let parameters_table2 = document.getElementById("parameters_table2").value;
+
+
+                    function all_employees_salary(table1, table2, parameters_table1, parameters_table2) {
+
+                        let table1_array = table1.map(table1_code => {
+                            let table2_array = table2.find(table2_code => table2_code[parameters_table2] === table1_code[parameters_table1])
+                            return { ...table1_code, ...table2_array }
+                        })
+
+                        let table2_array = table2.map(table2_code => {
+                            let table1_array = table1.find(table1_code => table1_code[parameters_table1] === table2_code[parameters_table2])
+                            return { ...table2_code, ...table1_array }
+                        })
+
+                        let employees_salary = table2_array.concat(table1_array)
+
+                        let filtered_employees_salary = [...new Map(employees_salary.map(dup => [dup[parameters_table1], dup])).values()]
+
+                        var header = []
+                        for (var i = 0; i < table1.length; i++) {
+                            var fes = filtered_employees_salary[i]
+                            var header = header.concat(Object.keys(fes))
+                        }
+
+                        let unique_header = [...new Set(header)];
+
+                        output(filtered_employees_salary, unique_header)
+
+                    }
+
+                    function output(employees, headers) {
+                        let table = document.createElement("table")
+                        let headerRow = document.createElement('tr');
+
+                        headers.forEach(headerText => {
+                            let header = document.createElement('th');
+                            let textNode = document.createTextNode(headerText);
+                            header.appendChild(textNode);
+                            headerRow.appendChild(header);
+                        });
+                        table.appendChild(headerRow);
+
+                        employees.forEach(emp => {
+                            let row = document.createElement('tr');
+                            Object.values(emp).forEach(text => {
+                                let cell = document.createElement('td');
+                                let textNode = document.createTextNode(text);
+                                cell.appendChild(textNode);
+                                row.appendChild(cell);
+                            })
+                            table.appendChild(row);
+                        });
+
+                        my_table.appendChild(table)
+                    }
+
+                    all_employees_salary(input_table1, input_table2, parameters_table1, parameters_table2)
                 }
                 else {
                     alert("Choose CSV data type")
                 }
             }
-            else{
+            else {
                 alert("Choose data type")
             }
-            
+
         }
 
     </script>
