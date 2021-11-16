@@ -90,19 +90,6 @@
 
                     let unique_header = [...new Set(header)];
 
-                    filtered_employees_salary.forEach(employees_line => {
-                        for (var i = 0; i < unique_header.length; i++) {
-                            var header = unique_header[i]
-                            if (header in employees_line === false){
-                                employees_line[header] = "null"
-                            }
-                        }
-                        return{...employees_line}
-                    })
-
-                    console.log(unique_header)
-                    console.log(filtered_employees_salary)
-
                     output(filtered_employees_salary, unique_header)
 
                 }
@@ -121,13 +108,23 @@
 
                     employees.forEach(employees_text => {
                         let row = document.createElement('tr');
-                        Object.values(employees_text).forEach(text => {
-                            let cell = document.createElement('td');
-                            let text_node = document.createTextNode(text);
-                            cell.appendChild(text_node);
-                            row.appendChild(cell);
-                        })
-                        table.appendChild(row);                        
+                        for (var i = 0; i < headers.length; i++) {
+                            var header = headers[i]
+                            if (header in employees_text === true){
+                                let cell = document.createElement('td');
+                                let text_node = document.createTextNode(employees_text[header]);
+                                cell.appendChild(text_node);
+                                row.appendChild(cell);
+                                table.appendChild(row);
+                            }
+                            else{
+                                let cell = document.createElement('td');
+                                let text_node = document.createTextNode("");
+                                cell.appendChild(text_node);
+                                row.appendChild(cell);
+                                table.appendChild(row);
+                            }
+                        }                     
                     });
 
                     my_table.appendChild(table)
@@ -174,25 +171,35 @@
 
                     function output(employees, headers) {
                         let table = document.createElement("table")
-                        let headerRow = document.createElement('tr');
+                        let header_row = document.createElement('tr');
 
-                        headers.forEach(headerText => {
+                        headers.forEach(header_text => {
                             let header = document.createElement('th');
-                            let textNode = document.createTextNode(headerText);
-                            header.appendChild(textNode);
-                            headerRow.appendChild(header);
+                            let text_node = document.createTextNode(header_text);
+                            header.appendChild(text_node);
+                            header_row.appendChild(header);
                         });
-                        table.appendChild(headerRow);
+                        table.appendChild(header_row);
 
-                        employees.forEach(emp => {
+                        employees.forEach(employees_text => {
                             let row = document.createElement('tr');
-                            Object.values(emp).forEach(text => {
-                                let cell = document.createElement('td');
-                                let textNode = document.createTextNode(text);
-                                cell.appendChild(textNode);
-                                row.appendChild(cell);
-                            })
-                            table.appendChild(row);
+                            for (var i = 0; i < headers.length; i++) {
+                                var header = headers[i]
+                                if (header in employees_text === true){
+                                    let cell = document.createElement('td');
+                                    let text_node = document.createTextNode(employees_text[header]);
+                                    cell.appendChild(text_node);
+                                    row.appendChild(cell);
+                                    table.appendChild(row);
+                                }
+                                else{
+                                    let cell = document.createElement('td');
+                                    let text_node = document.createTextNode("");
+                                    cell.appendChild(text_node);
+                                    row.appendChild(cell);
+                                    table.appendChild(row);
+                                }
+                            }                     
                         });
 
                         my_table.appendChild(table)
@@ -242,25 +249,35 @@
 
                     function output(employees, headers) {
                         let table = document.createElement("table")
-                        let headerRow = document.createElement('tr');
+                        let header_row = document.createElement('tr');
 
-                        headers.forEach(headerText => {
+                        headers.forEach(header_text => {
                             let header = document.createElement('th');
-                            let textNode = document.createTextNode(headerText);
-                            header.appendChild(textNode);
-                            headerRow.appendChild(header);
+                            let text_node = document.createTextNode(header_text);
+                            header.appendChild(text_node);
+                            header_row.appendChild(header);
                         });
-                        table.appendChild(headerRow);
+                        table.appendChild(header_row);
 
-                        employees.forEach(emp => {
+                        employees.forEach(employees_text => {
                             let row = document.createElement('tr');
-                            Object.values(emp).forEach(text => {
-                                let cell = document.createElement('td');
-                                let textNode = document.createTextNode(text);
-                                cell.appendChild(textNode);
-                                row.appendChild(cell);
-                            })
-                            table.appendChild(row);
+                            for (var i = 0; i < headers.length; i++) {
+                                var header = headers[i]
+                                if (header in employees_text === true){
+                                    let cell = document.createElement('td');
+                                    let text_node = document.createTextNode(employees_text[header]);
+                                    cell.appendChild(text_node);
+                                    row.appendChild(cell);
+                                    table.appendChild(row);
+                                }
+                                else{
+                                    let cell = document.createElement('td');
+                                    let text_node = document.createTextNode("");
+                                    cell.appendChild(text_node);
+                                    row.appendChild(cell);
+                                    table.appendChild(row);
+                                }
+                            }                     
                         });
 
                         my_table.appendChild(table)
