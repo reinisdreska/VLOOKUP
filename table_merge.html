@@ -28,9 +28,10 @@
 
         <button class="btn btn-primary mb-1" onclick="tables()" id="input_table1" id="input_table2"
             id="parameters_table1" id="parameters_table2" id="data_type" id="csv_type">Create table</button>
+    
+    <div id="table"></div>    
+    
     </div>
-
-    <div id="table"></div>
 
 
     <script type="text/javascript" language="javascript">
@@ -82,12 +83,25 @@
                     let filtered_employees_salary = [...new Map(employees_salary.map(dup => [dup[parameters_table1], dup])).values()]
 
                     var header = []
-                    for (var i = 0; i < table1.length; i++) {
+                    for (var i = 0; i < filtered_employees_salary.length; i++) {
                         var fes = filtered_employees_salary[i]
                         var header = header.concat(Object.keys(fes))
                     }
 
                     let unique_header = [...new Set(header)];
+
+                    filtered_employees_salary.forEach(employees_line => {
+                        for (var i = 0; i < unique_header.length; i++) {
+                            var header = unique_header[i]
+                            if (header in employees_line === false){
+                                employees_line[header] = "null"
+                            }
+                        }
+                        return{...employees_line}
+                    })
+
+                    console.log(unique_header)
+                    console.log(filtered_employees_salary)
 
                     output(filtered_employees_salary, unique_header)
 
@@ -95,25 +109,25 @@
 
                 function output(employees, headers) {
                     let table = document.createElement("table")
-                    let headerRow = document.createElement('tr');
+                    let header_row = document.createElement('tr');
 
-                    headers.forEach(headerText => {
+                    headers.forEach(header_text => {
                         let header = document.createElement('th');
-                        let textNode = document.createTextNode(headerText);
-                        header.appendChild(textNode);
-                        headerRow.appendChild(header);
+                        let text_node = document.createTextNode(header_text);
+                        header.appendChild(text_node);
+                        header_row.appendChild(header);
                     });
-                    table.appendChild(headerRow);
+                    table.appendChild(header_row);
 
-                    employees.forEach(emp => {
+                    employees.forEach(employees_text => {
                         let row = document.createElement('tr');
-                        Object.values(emp).forEach(text => {
+                        Object.values(employees_text).forEach(text => {
                             let cell = document.createElement('td');
-                            let textNode = document.createTextNode(text);
-                            cell.appendChild(textNode);
+                            let text_node = document.createTextNode(text);
+                            cell.appendChild(text_node);
                             row.appendChild(cell);
                         })
-                        table.appendChild(row);
+                        table.appendChild(row);                        
                     });
 
                     my_table.appendChild(table)
@@ -147,7 +161,7 @@
                         let filtered_employees_salary = [...new Map(employees_salary.map(dup => [dup[parameters_table1], dup])).values()]
 
                         var header = []
-                        for (var i = 0; i < table1.length; i++) {
+                        for (var i = 0; i < filtered_employees_salary.length; i++) {
                             var fes = filtered_employees_salary[i]
                             var header = header.concat(Object.keys(fes))
                         }
@@ -215,7 +229,7 @@
                         let filtered_employees_salary = [...new Map(employees_salary.map(dup => [dup[parameters_table1], dup])).values()]
 
                         var header = []
-                        for (var i = 0; i < table1.length; i++) {
+                        for (var i = 0; i < filtered_employees_salary.length; i++) {
                             var fes = filtered_employees_salary[i]
                             var header = header.concat(Object.keys(fes))
                         }

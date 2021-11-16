@@ -21,3 +21,8 @@ input {
     width: 13.7%;
     height: 40px;
 }
+
+tr,th,td{
+    border: 1px solid black;
+    text-align:center;
+}
