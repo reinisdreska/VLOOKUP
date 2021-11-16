@@ -68,19 +68,20 @@
                 return { ...table2_code, ...table1_array }
             })
 
-            let bout_table_content = table2_array.concat(table1_array)
+            let both_table_content = table2_array.concat(table1_array)
 
-            let filtered_bout_table_content = [...new Map(bout_table_content.map(dup => [dup[parameters_table1], dup])).values()]
+            let filtered_both_table_content = [...new Map(both_table_content.map(dup => [dup[parameters_table1], dup])).values()]
 
             var header = []
-            for (var i = 0; i < filtered_bout_table_content.length; i++) {
-                var fes = filtered_bout_table_content[i]
+            for (var i = 0; i < filtered_both_table_content.length; i++) {
+                var fes = filtered_both_table_content[i]
                 var header = header.concat(Object.keys(fes))
             }
 
             let unique_header = [...new Set(header)];
 
-            output(filtered_bout_table_content, unique_header)
+            output(filtered_both_table_content, unique_header)
+            get_csv(filtered_both_table_content, unique_header)
 
         }
 
@@ -119,6 +120,41 @@
             });
 
             my_table.appendChild(table)
+        }
+
+        function get_csv(data, headers) {
+            const csv_rows = []
+            csv_rows.push(headers.join(","));
+
+            for (const row of data){
+                const values = headers.map(header => {
+                    if (header in row === true){
+                        const escaped = (""+row[header]).replace(/"/g, '\\"')
+                        return `"${row[header]}"`
+                    }
+                    else {
+                        const empty = " "
+                        return `"${empty}"`
+                    }
+                })
+                csv_rows.push(values.join(","))
+            }
+
+            const new_csv_rows = csv_rows.join("\n")
+            download_csv(new_csv_rows)
+            console.log(new_csv_rows)
+        }
+
+        function download_csv(data){
+            const blob = new Blob([data], { type: "text/csv"});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.setAttribute("hidden", "");
+            a.setAttribute("href", url);
+            a.setAttribute("download", "table_merge.csv");
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         function tables() {
