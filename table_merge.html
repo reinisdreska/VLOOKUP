@@ -35,6 +35,7 @@
 
 
     <script type="text/javascript" language="javascript">
+        let my_table = document.querySelector('#table');
 
         function populate(s1, s2) {
             var s1 = document.getElementById(s1);
@@ -55,9 +56,72 @@
             }
         }
 
-        function tables() {
-            let my_table = document.querySelector('#table');
+        function table_content(table1, table2, parameters_table1, parameters_table2) {
 
+            let table1_array = table1.map(table1_code => {
+                let table2_array = table2.find(table2_code => table2_code[parameters_table2] === table1_code[parameters_table1])
+                return { ...table1_code, ...table2_array }
+            })
+
+            let table2_array = table2.map(table2_code => {
+                let table1_array = table1.find(table1_code => table1_code[parameters_table1] === table2_code[parameters_table2])
+                return { ...table2_code, ...table1_array }
+            })
+
+            let bout_table_content = table2_array.concat(table1_array)
+
+            let filtered_bout_table_content = [...new Map(bout_table_content.map(dup => [dup[parameters_table1], dup])).values()]
+
+            var header = []
+            for (var i = 0; i < filtered_bout_table_content.length; i++) {
+                var fes = filtered_bout_table_content[i]
+                var header = header.concat(Object.keys(fes))
+            }
+
+            let unique_header = [...new Set(header)];
+
+            output(filtered_bout_table_content, unique_header)
+
+        }
+
+        function output(table_content, headers) {
+            let table = document.createElement("table")
+            let header_row = document.createElement('tr');
+
+            headers.forEach(header_text => {
+                let header = document.createElement('th');
+                let text_node = document.createTextNode(header_text);
+                header.appendChild(text_node);
+                header_row.appendChild(header);
+            });
+            table.appendChild(header_row);
+
+            table_content.forEach(table_content_row => {
+                let row = document.createElement('tr');
+                for (var i = 0; i < headers.length; i++) {
+                    var header = headers[i]
+                    if (header in table_content_row === true){
+                        let cell = document.createElement('td');
+                        let text_node = document.createTextNode(table_content_row[header]);
+                        cell_row(cell, text_node)
+                    }
+                    else{
+                        let cell = document.createElement('td');
+                        let text_node = document.createTextNode("");
+                        cell_row(cell, text_node)
+                    }
+                }
+                function cell_row (cell, text_node){
+                    cell.appendChild(text_node);
+                    row.appendChild(cell);
+                    table.appendChild(row);
+                }               
+            });
+
+            my_table.appendChild(table)
+        }
+
+        function tables() {
             if (data_type.value == "json") {
                 console.log(data_type.value)
                 let input_table1 = JSON.parse(document.getElementById("input_table1").value);
@@ -65,72 +129,7 @@
                 let parameters_table1 = document.getElementById("parameters_table1").value;
                 let parameters_table2 = document.getElementById("parameters_table2").value;
 
-
-                function all_employees_salary(table1, table2, parameters_table1, parameters_table2) {
-
-                    let table1_array = table1.map(table1_code => {
-                        let table2_array = table2.find(table2_code => table2_code[parameters_table2] === table1_code[parameters_table1])
-                        return { ...table1_code, ...table2_array }
-                    })
-
-                    let table2_array = table2.map(table2_code => {
-                        let table1_array = table1.find(table1_code => table1_code[parameters_table1] === table2_code[parameters_table2])
-                        return { ...table2_code, ...table1_array }
-                    })
-
-                    let employees_salary = table2_array.concat(table1_array)
-
-                    let filtered_employees_salary = [...new Map(employees_salary.map(dup => [dup[parameters_table1], dup])).values()]
-
-                    var header = []
-                    for (var i = 0; i < filtered_employees_salary.length; i++) {
-                        var fes = filtered_employees_salary[i]
-                        var header = header.concat(Object.keys(fes))
-                    }
-
-                    let unique_header = [...new Set(header)];
-
-                    output(filtered_employees_salary, unique_header)
-
-                }
-
-                function output(employees, headers) {
-                    let table = document.createElement("table")
-                    let header_row = document.createElement('tr');
-
-                    headers.forEach(header_text => {
-                        let header = document.createElement('th');
-                        let text_node = document.createTextNode(header_text);
-                        header.appendChild(text_node);
-                        header_row.appendChild(header);
-                    });
-                    table.appendChild(header_row);
-
-                    employees.forEach(employees_text => {
-                        let row = document.createElement('tr');
-                        for (var i = 0; i < headers.length; i++) {
-                            var header = headers[i]
-                            if (header in employees_text === true){
-                                let cell = document.createElement('td');
-                                let text_node = document.createTextNode(employees_text[header]);
-                                cell.appendChild(text_node);
-                                row.appendChild(cell);
-                                table.appendChild(row);
-                            }
-                            else{
-                                let cell = document.createElement('td');
-                                let text_node = document.createTextNode("");
-                                cell.appendChild(text_node);
-                                row.appendChild(cell);
-                                table.appendChild(row);
-                            }
-                        }                     
-                    });
-
-                    my_table.appendChild(table)
-                }
-
-                all_employees_salary(input_table1, input_table2, parameters_table1, parameters_table2)
+                table_content(input_table1, input_table2, parameters_table1, parameters_table2)
 
             }
             else if (data_type.value == "csv") {
@@ -141,71 +140,7 @@
                     let parameters_table1 = document.getElementById("parameters_table1").value;
                     let parameters_table2 = document.getElementById("parameters_table2").value;
 
-                    function all_employees_salary(table1, table2, parameters_table1, parameters_table2) {
-
-                        let table1_array = table1.map(table1_code => {
-                            let table2_array = table2.find(table2_code => table2_code[parameters_table2] === table1_code[parameters_table1])
-                            return { ...table1_code, ...table2_array }
-                        })
-
-                        let table2_array = table2.map(table2_code => {
-                            let table1_array = table1.find(table1_code => table1_code[parameters_table1] === table2_code[parameters_table2])
-                            return { ...table2_code, ...table1_array }
-                        })
-
-                        let employees_salary = table2_array.concat(table1_array)
-
-                        let filtered_employees_salary = [...new Map(employees_salary.map(dup => [dup[parameters_table1], dup])).values()]
-
-                        var header = []
-                        for (var i = 0; i < filtered_employees_salary.length; i++) {
-                            var fes = filtered_employees_salary[i]
-                            var header = header.concat(Object.keys(fes))
-                        }
-
-                        let unique_header = [...new Set(header)];
-
-                        output(filtered_employees_salary, unique_header)
-
-                    }
-
-                    function output(employees, headers) {
-                        let table = document.createElement("table")
-                        let header_row = document.createElement('tr');
-
-                        headers.forEach(header_text => {
-                            let header = document.createElement('th');
-                            let text_node = document.createTextNode(header_text);
-                            header.appendChild(text_node);
-                            header_row.appendChild(header);
-                        });
-                        table.appendChild(header_row);
-
-                        employees.forEach(employees_text => {
-                            let row = document.createElement('tr');
-                            for (var i = 0; i < headers.length; i++) {
-                                var header = headers[i]
-                                if (header in employees_text === true){
-                                    let cell = document.createElement('td');
-                                    let text_node = document.createTextNode(employees_text[header]);
-                                    cell.appendChild(text_node);
-                                    row.appendChild(cell);
-                                    table.appendChild(row);
-                                }
-                                else{
-                                    let cell = document.createElement('td');
-                                    let text_node = document.createTextNode("");
-                                    cell.appendChild(text_node);
-                                    row.appendChild(cell);
-                                    table.appendChild(row);
-                                }
-                            }                     
-                        });
-
-                        my_table.appendChild(table)
-                    }
-
-                    all_employees_salary(input_table1, input_table2, parameters_table1, parameters_table2)
+                    table_content(input_table1, input_table2, parameters_table1, parameters_table2)
 
                 }
                 else if (csv_type.value == "csv_t") {
@@ -218,72 +153,7 @@
                     let parameters_table1 = document.getElementById("parameters_table1").value;
                     let parameters_table2 = document.getElementById("parameters_table2").value;
 
-
-                    function all_employees_salary(table1, table2, parameters_table1, parameters_table2) {
-
-                        let table1_array = table1.map(table1_code => {
-                            let table2_array = table2.find(table2_code => table2_code[parameters_table2] === table1_code[parameters_table1])
-                            return { ...table1_code, ...table2_array }
-                        })
-
-                        let table2_array = table2.map(table2_code => {
-                            let table1_array = table1.find(table1_code => table1_code[parameters_table1] === table2_code[parameters_table2])
-                            return { ...table2_code, ...table1_array }
-                        })
-
-                        let employees_salary = table2_array.concat(table1_array)
-
-                        let filtered_employees_salary = [...new Map(employees_salary.map(dup => [dup[parameters_table1], dup])).values()]
-
-                        var header = []
-                        for (var i = 0; i < filtered_employees_salary.length; i++) {
-                            var fes = filtered_employees_salary[i]
-                            var header = header.concat(Object.keys(fes))
-                        }
-
-                        let unique_header = [...new Set(header)];
-
-                        output(filtered_employees_salary, unique_header)
-
-                    }
-
-                    function output(employees, headers) {
-                        let table = document.createElement("table")
-                        let header_row = document.createElement('tr');
-
-                        headers.forEach(header_text => {
-                            let header = document.createElement('th');
-                            let text_node = document.createTextNode(header_text);
-                            header.appendChild(text_node);
-                            header_row.appendChild(header);
-                        });
-                        table.appendChild(header_row);
-
-                        employees.forEach(employees_text => {
-                            let row = document.createElement('tr');
-                            for (var i = 0; i < headers.length; i++) {
-                                var header = headers[i]
-                                if (header in employees_text === true){
-                                    let cell = document.createElement('td');
-                                    let text_node = document.createTextNode(employees_text[header]);
-                                    cell.appendChild(text_node);
-                                    row.appendChild(cell);
-                                    table.appendChild(row);
-                                }
-                                else{
-                                    let cell = document.createElement('td');
-                                    let text_node = document.createTextNode("");
-                                    cell.appendChild(text_node);
-                                    row.appendChild(cell);
-                                    table.appendChild(row);
-                                }
-                            }                     
-                        });
-
-                        my_table.appendChild(table)
-                    }
-
-                    all_employees_salary(input_table1, input_table2, parameters_table1, parameters_table2)
+                    table_content(input_table1, input_table2, parameters_table1, parameters_table2)
                 }
                 else {
                     alert("Choose CSV data type")
