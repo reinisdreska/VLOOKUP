@@ -26,3 +26,13 @@ tr,th,td{
     border: 1px solid black;
     text-align:center;
 }
+
+.right {
+    text-align: right;
+    padding-right: 62px
+}
+
+.right button {
+    width: 13.7%;
+    height: 40px;
+}

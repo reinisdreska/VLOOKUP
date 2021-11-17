@@ -29,10 +29,14 @@
         <button class="btn btn-primary mb-1" onclick="tables()" id="input_table1" id="input_table2"
             id="parameters_table1" id="parameters_table2" id="data_type" id="csv_type">Create table</button>
     
-    <div id="table"></div>    
+        <div class="right">
+            <button class="btn btn-primary mb-1" id="download_json">Download JSON</button>
+            <button class="btn btn-primary mb-1" id="download_csv">Download CSV</button>
+        </div>
     
-    </div>
+        <div id="table"></div>
 
+    </div>
 
     <script type="text/javascript" language="javascript">
         let my_table = document.querySelector('#table');
@@ -82,6 +86,7 @@
 
             output(filtered_both_table_content, unique_header)
             get_csv(filtered_both_table_content, unique_header)
+            get_json(filtered_both_table_content, unique_header)
 
         }
 
@@ -140,9 +145,22 @@
                 csv_rows.push(values.join(","))
             }
 
-            const new_csv_rows = csv_rows.join("\n")
-            download_csv(new_csv_rows)
-            console.log(new_csv_rows)
+            const csv_data = csv_rows.join("\n")
+            download_csv(csv_data)
+            console.log(csv_data)
+        }
+
+        function get_json(data, headers){
+            for (const row of data){
+                const values = headers.map(header => {
+                    if (header in row === false){
+                        return(row[header] = "")
+                    }
+                })
+            }
+            json_data = JSON.stringify(data)
+            download_json(json_data)
+            console.log(json_data)
         }
 
         function download_csv(data){
@@ -153,7 +171,23 @@
             a.setAttribute("href", url);
             a.setAttribute("download", "table_merge.csv");
             document.body.appendChild(a);
-            a.click();
+            $("#download_csv").on("click", function(){
+                a.click();
+            })
+            document.body.removeChild(a);
+        }
+
+        function download_json(data){
+            const blob = new Blob([data], { type: "text/json"});
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.setAttribute("hidden", "");
+            a.setAttribute("href", url);
+            a.setAttribute("download", "table_merge.json");
+            document.body.appendChild(a);
+            $("#download_json").on("click", function(){
+                a.click();
+            })
             document.body.removeChild(a);
         }
 
