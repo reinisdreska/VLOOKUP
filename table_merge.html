@@ -15,6 +15,12 @@
         <textarea id="input_table1" placeholder="Enter first table"></textarea>
         <textarea id="input_table2" placeholder="Enter second table"></textarea>
         <br>
+        <div class="file-upload">
+            <input class="file-upload__input_table1" type="file" name="table1_file" id="table1_file" accept=".csv, .xlsx">
+            <input class="file-upload__input_table2" type="file" name="table2_file" id="table2_file" accept=".csv, .xlsx">
+        </div>
+        <p>Abiem failiem jābūt viena veida un ja izvēlas excel failus tad datu tips ir jaizvelas csv un csv tips arī csv</p>
+        <br>
         <input type="text" id="parameters_table1" placeholder="Enter firsts tables parameter">
         <input type="text" id="parameters_table2" placeholder="Enter second tables paremeter">
         <p></p>
@@ -26,7 +32,7 @@
         <select name="csv_type" id="csv_type">
         </select>
 
-        <button class="btn btn-primary mb-1" onclick="tables()" id="input_table1" id="input_table2"
+        <button class="btn btn-primary mb-1" onclick="tables()" id="table1_file" id="table2_file" id="input_table1" id="input_table2"
             id="parameters_table1" id="parameters_table2" id="data_type" id="csv_type">Create table</button>
     
         <div class="right">
@@ -160,7 +166,6 @@
             }
             json_data = JSON.stringify(data)
             download_json(json_data)
-            console.log(json_data)
         }
 
         function download_csv(data){
@@ -205,12 +210,53 @@
             else if (data_type.value == "csv") {
                 if (csv_type.value == "csv_nor") {
                     console.log(csv_type.value)
-                    let input_table1 = Papa.parse(document.getElementById("input_table1").value, { header: true }).data;
-                    let input_table2 = Papa.parse(document.getElementById("input_table2").value, { header: true }).data;
+                    
                     let parameters_table1 = document.getElementById("parameters_table1").value;
                     let parameters_table2 = document.getElementById("parameters_table2").value;
 
-                    table_content(input_table1, input_table2, parameters_table1, parameters_table2)
+                    file1_type = String(document.getElementById("table1_file").value)
+                    file1_type = file1_type.substring(file1_type.indexOf(".") + 1);
+                    file2_type = String(document.getElementById("table2_file").value)
+                    file2_type = file2_type.substring(file2_type.indexOf(".") + 1);
+                    
+                    if (file1_type == "csv" && file2_type == "csv"){
+                        console.log(file1_type, file2_type)
+                        let file_table1 = []
+                        let file_table2 = []
+                        const file_table1_raw = Papa.parse(document.getElementById("table1_file").files[0],
+                            {
+                                header: true,
+                                skipEmptyLines: true,
+                                complete: function(results){
+                                    file_table1 = results.data
+                                    file_data()
+                                }
+                            })
+                        const file_table2_raw = Papa.parse(document.getElementById("table2_file").files[0],
+                            {
+                                header: true,
+                                skipEmptyLines: true,
+                                complete: function(results){
+                                    file_table2 = results.data
+                                    file_data()
+                                }
+                            })
+                        function file_data(){
+                            if (file_table2.length != 0){
+                                console.log(file_table1, file_table2)
+                                table_content(file_table1, file_table2, parameters_table1, parameters_table2)
+                            }
+                        }
+                    }
+                    else if(file1_type == "xlsx" && file2_type == "xlsx"){
+                        alert("Šis vēl nestrādā")
+                    }
+                    else{
+                        let input_table1 = Papa.parse(document.getElementById("input_table1").value, { header: true }).data;
+                        let input_table2 = Papa.parse(document.getElementById("input_table2").value, { header: true }).data;
+
+                        table_content(input_table1, input_table2, parameters_table1, parameters_table2)
+                    }
 
                 }
                 else if (csv_type.value == "csv_t") {
